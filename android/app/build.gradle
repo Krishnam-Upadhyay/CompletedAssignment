@@ -101,7 +101,7 @@ android {
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
-            v1SigningEnabled true    // Optional, for backward compatibility
+            v1SigningEnabled true    
             v2SigningEnabled true    // Ensure v2 signing is enabled
         }
     }

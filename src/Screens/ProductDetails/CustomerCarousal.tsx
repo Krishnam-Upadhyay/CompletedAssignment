@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Animated, Dimensions } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Image, StyleSheet, FlatList, TouchableOpacity, Text, Dimensions, Animated } from 'react-native';
 
 interface CustomCarouselProps {
   images: string[];
@@ -8,35 +8,46 @@ interface CustomCarouselProps {
 const { width } = Dimensions.get('window');
 
 const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
+  const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const handleNext = () => {
     const nextIndex = (currentIndex + 1) % images.length;
     setCurrentIndex(nextIndex);
-    scrollToIndex(nextIndex);
+    flatListRef.current?.scrollToIndex({ animated: true, index: nextIndex });
   };
 
   const handlePrevious = () => {
     const prevIndex = (currentIndex - 1 + images.length) % images.length;
     setCurrentIndex(prevIndex);
-    scrollToIndex(prevIndex);
+    flatListRef.current?.scrollToIndex({ animated: true, index: prevIndex });
   };
 
-  const scrollToIndex = (index: number) => {
-    Animated.spring(scrollX, {
-      toValue: -index * width,
-      useNativeDriver: true,
-    }).start();
-  };
+  const renderItem = ({ item }: { item: string }) => (
+    <Image source={{ uri: item }} style={styles.image} />
+  );
+
+  const onViewRef = useRef((viewableItems: any) => {
+    setCurrentIndex(viewableItems.changed[0].index);
+  });
+
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.imageContainer, { transform: [{ translateX: scrollX }] }]}>
-        {images.map((image, index) => (
-          <Image key={index} source={{ uri: image }} style={styles.image} />
-        ))}
-      </Animated.View>
+      <FlatList
+        ref={flatListRef}
+        data={images}
+        renderItem={renderItem}
+        keyExtractor={(_, index) => index.toString()}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+        onViewableItemsChanged={onViewRef.current}
+        viewabilityConfig={viewConfigRef.current}
+      />
       <View style={styles.navigation}>
         <TouchableOpacity onPress={handlePrevious} style={styles.button}>
           <Text style={styles.buttonText}>‹</Text>
@@ -44,6 +55,17 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
         <TouchableOpacity onPress={handleNext} style={styles.button}>
           <Text style={styles.buttonText}>›</Text>
         </TouchableOpacity>
+      </View>
+      <View style={styles.indicatorContainer}>
+        {images.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.indicator,
+              index === currentIndex ? styles.activeIndicator : styles.inactiveIndicator,
+            ]}
+          />
+        ))}
       </View>
     </View>
   );
@@ -53,11 +75,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 300,
-    overflow: 'hidden',
-  },
-  imageContainer: {
-    flexDirection: 'row',
-    width: width * 3, // For a maximum of 3 images in view at a time
+    position: 'relative',
   },
   image: {
     width: width,
@@ -70,16 +88,36 @@ const styles = StyleSheet.create({
     top: '50%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
+    zIndex: 1,
   },
   button: {
     backgroundColor: '#000',
     borderRadius: 50,
     padding: 10,
+    opacity: 0.6,
   },
   buttonText: {
     color: '#fff',
     fontSize: 24,
+  },
+  indicatorContainer: {
+    position: 'absolute',
+    bottom: 10,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  indicator: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    margin: 5,
+  },
+  activeIndicator: {
+    backgroundColor: '#fff',
+  },
+  inactiveIndicator: {
+    backgroundColor: '#888',
   },
 });
 

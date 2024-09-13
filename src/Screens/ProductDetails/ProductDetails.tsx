@@ -77,7 +77,7 @@ const ProductDetails: React.FC<any> = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'black',
   },
   image: {
     width: '100%',

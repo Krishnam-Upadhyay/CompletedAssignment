@@ -13,6 +13,6 @@ Steps to Run this project
 3=> run npm i
 4=> run "npx react-native run-android" or "npm start" then select your specific  platform "press a for android" or " press i form ios"
 
-Note: If you feel any technical dificulty to run this project  please contact me . 
+Note: If you feel any technical dificulty to run this project  please contact me on gmail upadhyaykrishnam23@gmail.com . 
 
 

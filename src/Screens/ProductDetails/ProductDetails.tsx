@@ -77,7 +77,7 @@ const ProductDetails: React.FC<any> = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#000000',
   },
   image: {
     width: '100%',
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:"#FFFFFF",
   },
   price: {
     fontSize: 20,
@@ -101,17 +102,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 15,
     lineHeight: 22,
+    color:"#FFFFFF",
   },
   infoContainer: {
     marginBottom: 15,
+
   },
   infoTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    color:"#FFFFFF",
   },
   infoText: {
     fontSize: 16,
     marginBottom: 10,
+    color:"#FFFFFF",
   },
   tagsContainer: {
     flexDirection: 'row',

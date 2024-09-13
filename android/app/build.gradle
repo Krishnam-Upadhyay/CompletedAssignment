@@ -102,7 +102,7 @@ android {
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
             v1SigningEnabled true    
-            v2SigningEnabled true    // Ensure v2 signing is enabled
+            v2SigningEnabled true    
         }
     }
     buildTypes {
